@@ -17,6 +17,7 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines
 
 mongoose.connect(MONGODB_URI, {useNewUrlParser: true});
 
+// route to scrape articles from edsbs
 app.get("/scrape", function(req, res) {
     axios.get("https://www.everydayshouldbesaturday.com/").then(function(response) {
         var $ = cheerio.load(response.data);
@@ -37,6 +38,17 @@ app.get("/scrape", function(req, res) {
         });
         res.send("Scrape Complete");
     });
+});
+
+// route to display articles scraped from edsbs to browser page
+app.get("/articles", function(req, res) {
+    db.Article.find({})
+        .then(function(dbArticle) {
+            res.json(dbArticle);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
 });
 
 app.listen(PORT, function() {
