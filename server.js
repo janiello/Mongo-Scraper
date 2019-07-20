@@ -21,14 +21,14 @@ mongoose.connect(MONGODB_URI, {useNewUrlParser: true});
 app.get("/scrape", function(req, res) {
     axios.get("https://www.everydayshouldbesaturday.com/").then(function(response) {
         var $ = cheerio.load(response.data);
-        $("div.c-entry-box--compact--article").each(function(i, element) {
+        $("div.c-entry-box--compact--article h2").each(function(i, element) {
             var result = {};
             result.title = $(this)
                 .children("a")
                 .text();
             result.link = $(this)
                 .children("a")
-                .text("href");
+                .attr("href");
             db.Article.create(result).then(function(dbArticle) {
                 console.log(dbArticle);
             })
@@ -40,7 +40,7 @@ app.get("/scrape", function(req, res) {
     });
 });
 
-// route to display articles scraped from edsbs to browser page
+// route to display json data of articles scraped from edsbs to browser page
 app.get("/articles", function(req, res) {
     db.Article.find({})
         .then(function(dbArticle) {

@@ -9,7 +9,7 @@ var ArticleSchema = new Schema({
     },
     link: {
         type: String,
-        require: true
+        required: true
     },
     note: {
         type: Schema.Types.ObjectId,
